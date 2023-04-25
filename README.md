@@ -6,8 +6,8 @@
 
 ## Instalación
 
-1. Clona este repositorio en tu computadora: `git clone https://github.com/tu-usuario/fastapi-docker.git`
-2. Navega a la carpeta del proyecto: `cd FastApi`
+1. Clona este repositorio en tu ordenador
+2. Navega a la carpeta del proyecto
 
 ## Uso
 
