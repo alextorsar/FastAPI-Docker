@@ -3,7 +3,8 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 COPY ./app /app/app
 
 # Instalamos las dependencias necesarias
-RUN pip install pymongo
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Exponemos el puerto de la aplicación
 EXPOSE 8000

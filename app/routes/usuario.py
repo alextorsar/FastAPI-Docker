@@ -1,6 +1,5 @@
 from bson.objectid import ObjectId
 from fastapi import APIRouter, HTTPException
-import app.bd.FactoriaSQL
 from app.bd import FactoriaMongo
 from app.schemas.usuario import usuarioEntity, usuariosEntity, usuariosAlgoritmoEntity, usuariosEntityId
 from app.models.usuario import UsuarioMongo
@@ -26,9 +25,8 @@ def get_Usuario(id):
     db = conn["tfg"]
     coll = db["users"]
     usuario_bd = usuarioEntity(coll.find_one({"_id": ObjectId(id)}))
-    conn.close()
     if usuario_bd:
-        return usuarioEntity(usuario_bd)
+        return dict(usuario_bd)
     else:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
