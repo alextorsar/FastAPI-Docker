@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from routes.usuario import router as usuario_router
-from routes.restaurante import router as restaurante_router
-from routes.review import router as review_router
+from app.routes.usuario import router as usuario_router
+from app.routes.restaurante import router as restaurante_router
+from app.routes.review import router as review_router
 
 app = FastAPI(
     title="API TFF",
