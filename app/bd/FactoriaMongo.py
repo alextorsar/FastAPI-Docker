@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-import app.config.db as db
+import app.utils.db as db
 
 
 def getConexion():

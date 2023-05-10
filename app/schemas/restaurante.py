@@ -1,6 +1,5 @@
 from app.models.restaurante import RestauranteSQL, Photo, PlusCode
 from app.models.restaurante import Geometry
-from app.models.restaurante import Coordenada
 from typing import Optional
 
 
@@ -99,21 +98,5 @@ def transformarEsquemaRelacionalAMongo(restaurante: RestauranteSQL)->dict:
         "reference": Optional[str],
         "types": Optional[list[str]],
         "user_ratings_total": int,
-        "photo_url": restaurante.foto_URL,
-
-        #"formatted_address": RestauranteSQL["localizacion"],
-        #"geometry": Geometry(),
-        #icon: Optional[str],
-        #icon_background_color: Optional[str],
-        #icon_mask_base_uri: Optional[str],
-        #name: str,
-        #photos: Optional[list[Photo]],
-        #place_id: str,
-        #plus_code: Optional[PlusCode],
-        #price_level: Optional[int],
-        #rating: float,
-        #reference: Optional[str],
-        #types: Optional[list[str]],
-        #user_ratings_total: int,
-        #photo_url: str,
+        "photo_url": restaurante.foto_URL
     }

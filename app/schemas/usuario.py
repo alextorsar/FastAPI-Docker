@@ -1,4 +1,3 @@
-from bson import ObjectId
 
 def usuarioAlgoritmoEntity(item, idArtifical) -> dict:
     return{
@@ -25,13 +24,26 @@ def usuarioEntity(item) -> dict:
         "numReviewsEnBD": item["numReviewsEnBD"],
     }
 
+
 def usuariosEntity(usuarios) -> list:
     return [usuarioEntity(item) for item in usuarios]
+
 
 def usuarioEntityId(item) ->dict:
     return {
         "oid": str(item["_id"])
     }
 
+
 def usuariosEntityId(usuarios) -> list:
     return [usuarioEntityId(item) for item in usuarios]
+
+
+def usuarioEntitySQL(item) -> dict:
+    return{
+        "oid": item["idUsuario"],
+        "idArtificial": item["idArtificial"]
+    }
+
+def usuariosEntitySQL(usuarios) -> list:
+    return [usuarioEntitySQL(item) for item in usuarios]

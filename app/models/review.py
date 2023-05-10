@@ -1,17 +1,20 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class ReviewMongo(BaseModel):
-    placeId: str
-    restaurantName: str
-    name: str
+    placeId: Optional[str]
+    restaurantName: Optional[str]
+    name: Optional[str]
     text: str
-    publishedAtDate: str
-    likesCount: int
-    reviewId: str
-    reviewerId: str
-    reviewerUrl: str
-    reviewerNumberOfReviews: int
-    isLocalGuide: bool
+    publishedAtDate: Optional[str]
+    likesCount: Optional[int]
+    reviewId: Optional[str]
+    reviewerId: Optional[str]
+    reviewerUrl: Optional[str]
+    reviewerNumberOfReviews: Optional[int]
+    isLocalGuide: Optional[bool]
     stars: int
-    lastReview: bool
+    lastReview: Optional[bool]
+    userOid: str
+    restaurantOid: str

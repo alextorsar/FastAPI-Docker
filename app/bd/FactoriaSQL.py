@@ -1,4 +1,4 @@
-import app.config.db as db
+import app.utils.db as db
 import pymysql
 
 

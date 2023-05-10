@@ -2,18 +2,18 @@ import json
 
 from bson.objectid import ObjectId
 from fastapi import APIRouter
-
 from app.bd import FactoriaMongo
 from app.routes.restaurante import get_RestaurantsId_From_Reviewers
-from app.schemas.review import reviewEntity, reviewsEntity, reviewsAlgoritmoEntity
+from app.schemas.review import reviewEntity, reviewsEntity, reviewsAlgoritmoEntity, ReviewMongoEntity
 from app.models.review import ReviewMongo
-from app.routes.usuario import get_Users_With_X_Reviews
+from app.routes.usuario import get_Users_With_X_Reviews, get_Users_With_X_Reviews_Algorythm
+from app.utils.utils import findIdArtificialUsuarioMongo, findIdArtificialRestauranteMongo
 
-router = APIRouter(
+review = APIRouter(
     tags=["Reviews"]
 )
 
-@router.get("/reviews")
+@review.get("/reviews")
 def get_Reviews():
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
@@ -23,7 +23,7 @@ def get_Reviews():
     return reviewsEntity(result)
 
 
-@router.get("/reviews/{id}")
+@review.get("/reviews/{id}")
 def get_Review(id):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
@@ -33,7 +33,7 @@ def get_Review(id):
     return dict(rewiew_bd)
 
 
-@router.get("/reviews/user/{id}")
+@review.get("/reviews/user/{id}")
 def get_User_Reviews(id):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
@@ -44,17 +44,17 @@ def get_User_Reviews(id):
     return reviewsEntity(reviews)
 
 
-@router.post("/revievs")
+@review.post("/review")
 def create_Review(review: ReviewMongo):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
     coll = db["reviews"]
-    coll.insert_one(review.dict())
+    coll.insert_one(ReviewMongoEntity(review))
     conn.close()
     return "Review creada"
 
 
-@router.get("/reviews/usuarios/{count}")
+@review.get("/reviews/usuarios/{count}")
 def get_Reviews_From_Reviewers(count):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
@@ -65,12 +65,10 @@ def get_Reviews_From_Reviewers(count):
 
     listaIdsUsuarios = []
     for i in range(len(usuariosXReviews)):
-        print(i)
         listaIdsUsuarios.append(ObjectId(usuariosXReviews[i]["oid"]))
 
     listaIdsRestaurantes = []
     for i in range(len(restaurentesFromReviews)):
-        print(i)
         listaIdsRestaurantes.append(ObjectId(restaurentesFromReviews[i]["oid"]))
 
     result = coll.find(
@@ -81,7 +79,7 @@ def get_Reviews_From_Reviewers(count):
     return reviewsAlgoritmoEntity(result, listaIdsUsuarios, listaIdsRestaurantes)
 
 
-@router.get("/reviews/restaurant/{id}")
+@review.get("/reviews/restaurant/{id}")
 def get_Reviews_from_Restaurant(id):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
@@ -90,3 +88,30 @@ def get_Reviews_from_Restaurant(id):
         {"restaurantOid": ObjectId(id)}
     )
     return reviewsEntity(reviews)
+
+
+@review.get("/algoritmo/review/{count}")
+def get_ReviewsId_From_Reviewers(count):
+    conn = FactoriaMongo.getConexion()
+    db = conn["tfg"]
+    reviews = db["reviews"]
+    usuariosXReviews = get_Users_With_X_Reviews_Algorythm(count)
+    restaurantesXReviews = get_RestaurantsId_From_Reviewers(count)
+    listaIds = []
+    for i in range(len(usuariosXReviews)):
+        listaIds.append(ObjectId(usuariosXReviews[i]["oid"]))
+
+    reviews = reviews.find(
+        {"userOid": {"$in": listaIds}},
+        {"restaurantOid": 1, "_id": 0, "userOid": 1, "stars": 1}
+    )
+    results = []
+    for review in reviews:
+        review["idArtificialUsuario"] = findIdArtificialUsuarioMongo(review, usuariosXReviews)
+        review["idArtificialRestaurante"] = findIdArtificialRestauranteMongo(review, restaurantesXReviews)
+        results.append(review)
+
+    reviews = reviewsAlgoritmoEntity(results)
+    conn.close()
+    return reviews
+

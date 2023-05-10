@@ -13,7 +13,13 @@
 
 1. Levanta la API mediante Docker utilizando el comando: `docker-compose up`.
 2. Accede a la API en tu navegador web en la dirección `http://localhost:8000/docs`.
-3. Detén los contenedores ejecutando el comando `docker-compose down` cuando hayas terminado de utilizar la API.
+3. Ejecutar en un terminal, desde "\Users\pablo\Downloads\ngrok-v3-stable-windows-amd64":
+
+    $ ngrok config add-authtoken 2NjxiHkUzX68td6PvMWTTvx15eC_3gMWwtNgeF3h5zAunAXVJ
+
+    $ ngrok http 8000     -> Esto nos dará la URL en el campo Forwarding
+
+4. Detén los contenedores ejecutando el comando `docker-compose down` cuando hayas terminado de utilizar la API.
 
 ## Información adicional
 
