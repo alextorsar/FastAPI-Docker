@@ -4,7 +4,7 @@ from typing import Optional
 
 
 def restauranteEntitySQL(item) -> dict:
-    if item["price_level"] is not None:
+    if "price_level" in item.keys():
         price_level = item["price_level"]
     else:
         price_level = None

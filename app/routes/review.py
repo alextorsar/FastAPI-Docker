@@ -41,7 +41,9 @@ def get_User_Reviews(id):
     reviews = coll.find(
         {"userOid": ObjectId(id)}
     )
-    return reviewsEntity(reviews)
+    results = reviewsEntity(reviews)
+    conn.close()
+    return results
 
 
 @review.post("/review")
@@ -75,8 +77,9 @@ def get_Reviews_From_Reviewers(count):
         {"userOid": {"$in": listaIdsUsuarios}},
         {"restaurantOid": 1, "stars": 1, "userOid": 1, "_id": 0}
     )
+    reviews = reviewsAlgoritmoEntity(result)
     conn.close()
-    return reviewsAlgoritmoEntity(result, listaIdsUsuarios, listaIdsRestaurantes)
+    return reviews
 
 
 @review.get("/reviews/restaurant/{id}")

@@ -77,7 +77,7 @@ def get_Users_With_X_Reviews(count):
     return result
 
 
-@usuario.get("/algoritmo/usuarios/{count}")
+@usuario.get("/algoritmo/usuarios/{count]")
 def get_Users_With_X_Reviews_Algorythm(count):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
