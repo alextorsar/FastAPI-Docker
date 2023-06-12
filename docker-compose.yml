@@ -6,8 +6,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - MONGO_URI=mongodb://Pablo:contraseniaPablo@90.164.253.234:25015/?authMechanism=DEFAULT
-      - HOST = "90.164.253.234"
+      - MONGO_URI=mongodb://Pablo:contraseniaPablo@90.106.182.13:25015/?authMechanism=DEFAULT
+      - HOST = "90.106.182.13"
       - PORT = 3304
       - USER = "administrador"
       - PASSWORD = "password"

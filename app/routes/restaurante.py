@@ -187,3 +187,17 @@ def get_restaurantes_similares(idRestaurante):
     conn.commit()
     conn.close()
     return restaurantesSimilares
+
+
+@restaurante.get("/restaurantes/search/{restaurantName}")
+def get_Restaurante_Search(restaurantName):
+    conn = FactoriaSQL.getConexion()
+    consulta = "SELECT idrestaurante, localizacion, latitud, longitud, nombre, foto_URL, place_id, price_level, " \
+               "num_reviews, rating FROM bd_relacional.restaurante WHERE nombre REGEXP %s"
+    cursor = conn.cursor()
+    cursor.execute(consulta, restaurantName)
+    results = cursor.fetchall()
+    restaurantes = restaurantesEntitySQL(results)
+    conn.commit()
+    conn.close()
+    return restaurantes
