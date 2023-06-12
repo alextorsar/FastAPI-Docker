@@ -1,9 +1,12 @@
+from app.models.usuario import UsuarioSQL, UsuarioMongo
+
 
 def usuarioAlgoritmoEntity(item, idArtifical) -> dict:
-    return{
+    return {
         "oid": str(item["_id"]),
         "idArtificial": idArtifical
     }
+
 
 def usuariosAlgoritmoEntity(usuarios) -> list:
     result = list()
@@ -12,6 +15,7 @@ def usuariosAlgoritmoEntity(usuarios) -> list:
         result.append(usuarioAlgoritmoEntity(usuario, idArtificial))
         idArtificial = idArtificial + 1
     return result
+
 
 def usuarioEntity(item) -> dict:
     return {
@@ -29,7 +33,7 @@ def usuariosEntity(usuarios) -> list:
     return [usuarioEntity(item) for item in usuarios]
 
 
-def usuarioEntityId(item) ->dict:
+def usuarioEntityId(item) -> dict:
     return {
         "oid": str(item["_id"])
     }
@@ -40,10 +44,22 @@ def usuariosEntityId(usuarios) -> list:
 
 
 def usuarioEntitySQL(item) -> dict:
-    return{
+    return {
         "oid": item["idUsuario"],
         "idArtificial": item["idArtificial"]
     }
 
+
 def usuariosEntitySQL(usuarios) -> list:
     return [usuarioEntitySQL(item) for item in usuarios]
+
+
+def convertUserSQLToMongo(usuario: UsuarioSQL):
+    return {
+        "name": usuario.Nombre,
+        "reviewerId": None,
+        "reviewerUrl": None,
+        "reviewerNumberOfReviews": 0,
+        "isLocalGuide": False,
+        "numReviewsEnBD": 0
+    }

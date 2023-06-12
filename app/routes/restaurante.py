@@ -1,7 +1,7 @@
 from typing import Union
 
 from bson import ObjectId
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.bd import FactoriaSQL
 from app.bd import FactoriaMongo
@@ -9,6 +9,7 @@ from app.routes.usuario import get_Users_With_X_Reviews
 from app.schemas.restaurante import restaurantesAlgoritmoEntity, \
     restaurantesEntitySQL, restauranteEntitySQL, transformarEsquemaRelacionalAMongo
 from app.models.restaurante import RestauranteMongo, RestauranteSQL
+from app.auth.auth_bearer import JWTBearer
 
 restaurante = APIRouter(
     tags=["Restaurantes"]
@@ -41,7 +42,7 @@ def get_Todos_Restaurantes():
     return restaurantesRecomendados
 
 
-@restaurante.get("/restaurantes/")
+@restaurante.get("/restaurantes/", dependencies=[Depends(JWTBearer())])
 def get_Restaurante(id: Union[str, None] = None):
     if id is not None:
         return get_Unico_Restaurante(id)
@@ -60,7 +61,7 @@ def get_Restaurantes_Algoritmo():
     return results
 
 
-@restaurante.get("/restaurantes/{idUsuario}")
+@restaurante.get("/restaurantes/{idUsuario}", dependencies=[Depends(JWTBearer())])
 def get_RestaurantesRecomendados(idUsuario):
     connSQL = FactoriaSQL.getConexion()
     consulta = "SELECT indiceRecomendacion, idrestaurante, localizacion, latitud, longitud, nombre, foto_URL, " \
@@ -79,7 +80,7 @@ def get_RestaurantesRecomendados(idUsuario):
 
 
 # FALLA
-@restaurante.post("/restaurantes")
+@restaurante.post("/restaurantes", dependencies=[Depends(JWTBearer())])
 def create_Restaurante(restaurant: RestauranteSQL):
     connSQL = FactoriaSQL.getConexion()
     sentenciaSQL = "INSERT INTO bd_relacional.restaurante VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
@@ -117,7 +118,7 @@ def get_RestaurantsId_From_Reviewers(count):
     return results
 
 
-@restaurante.post("/restaurantes/favoritos/{idRestaurante}/{idUsuario}")
+@restaurante.post("/restaurantes/favoritos/{idRestaurante}/{idUsuario}", dependencies=[Depends(JWTBearer())])
 def aniadir_restaurante_favorito(idRestaurante, idUsuario):
     conn = FactoriaSQL.getConexion()
     sentencia = "INSERT INTO bd_relacional.esfavorito VALUES(%s,%s)"
@@ -128,7 +129,7 @@ def aniadir_restaurante_favorito(idRestaurante, idUsuario):
     return "Aniadido a favoritos"
 
 
-@restaurante.delete("/restaurantes/favoritos/delete/{idRestaurante}/{idUsuario}")
+@restaurante.delete("/restaurantes/favoritos/delete/{idRestaurante}/{idUsuario}", dependencies=[Depends(JWTBearer())])
 def borrar_restaurante_favorito(idRestaurante, idUsuario):
     conn = FactoriaSQL.getConexion()
     sentencia = "DELETE FROM bd_relacional.esfavorito WHERE usuario_idUsuario = %s AND restaurante_idrestaurante = %s"
@@ -139,7 +140,7 @@ def borrar_restaurante_favorito(idRestaurante, idUsuario):
     return "Borrado con exito"
 
 
-@restaurante.get("/restaurantes/favoritos/{idUsuario}")
+@restaurante.get("/restaurantes/favoritos/{idUsuario}", dependencies=[Depends(JWTBearer())])
 def get_restaurantes_favoritos(idUsuario):
     conn = FactoriaSQL.getConexion()
     sentencia = "SELECT idrestaurante, localizacion, latitud, longitud, nombre, foto_URL, place_id, price_level, " \
@@ -155,7 +156,7 @@ def get_restaurantes_favoritos(idUsuario):
     return restauranteFavoritos
 
 
-@restaurante.get("/restaurantes/favoritos/aleatorio/{idUsuario}")
+@restaurante.get("/restaurantes/favoritos/aleatorio/{idUsuario}", dependencies=[Depends(JWTBearer())])
 def get_restaurantes_favoritos_aleatorio(idUsuario):
     conn = FactoriaSQL.getConexion()
     sentencia = "SELECT idrestaurante, localizacion, latitud, longitud, nombre, foto_URL, place_id, price_level, " \

@@ -1,13 +1,14 @@
 import json
 
 from bson.objectid import ObjectId
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from app.bd import FactoriaMongo
 from app.routes.restaurante import get_RestaurantsId_From_Reviewers
 from app.schemas.review import reviewEntity, reviewsEntity, reviewsAlgoritmoEntity, ReviewMongoEntity
 from app.models.review import ReviewMongo
 from app.routes.usuario import get_Users_With_X_Reviews, get_Users_With_X_Reviews_Algorythm
 from app.utils.utils import findIdArtificialUsuarioMongo, findIdArtificialRestauranteMongo
+from app.auth.auth_bearer import JWTBearer
 
 review = APIRouter(
     tags=["Reviews"]
@@ -23,7 +24,7 @@ def get_Reviews():
     return reviewsEntity(result)
 
 
-@review.get("/reviews/{id}")
+@review.get("/reviews/{id}", dependencies=[Depends(JWTBearer())])
 def get_Review(id):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
@@ -33,7 +34,7 @@ def get_Review(id):
     return dict(rewiew_bd)
 
 
-@review.get("/reviews/user/{id}")
+@review.get("/reviews/user/{id}",dependencies=[Depends(JWTBearer())])
 def get_User_Reviews(id):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
@@ -46,7 +47,7 @@ def get_User_Reviews(id):
     return results
 
 
-@review.post("/review")
+@review.post("/review", dependencies=[Depends(JWTBearer())])
 def create_Review(review: ReviewMongo):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]

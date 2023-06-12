@@ -1,5 +1,6 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from app.auth.auth_bearer import JWTBearer
 
 from app.routes.usuario import usuario
 from app.routes.restaurante import restaurante
