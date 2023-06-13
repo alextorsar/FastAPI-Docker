@@ -9,4 +9,4 @@ PASSWORD = settings.db_pass
 
 URL_MONGO = settings.db_url
 
-SALT = b'Lur9vFWtHdexGGUsYbe7Tni0zjvSVvC0gt3Tm4RebKM='
+SALT = settings.salt

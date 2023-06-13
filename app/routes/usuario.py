@@ -10,7 +10,7 @@ from cryptography.fernet import Fernet
 from app.auth.auth_bearer import JWTBearer
 import app.utils.db as db
 
-key = db.SALT
+key = db.SALT.encode('utf-8')
 cipher_suite = Fernet(key)
 
 usuario = APIRouter(

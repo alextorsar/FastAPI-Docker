@@ -11,3 +11,4 @@ services:
       - PORT = 3304
       - USER = "administrador"
       - PASSWORD = "password"
+      - SALT = "Lur9vFWtHdexGGUsYbe7Tni0zjvSVvC0gt3Tm4RebKM="

@@ -11,3 +11,4 @@ class Settings(BaseSettings):
     db_pass: str = os.getenv('PASSWORD')
     db_host: str = os.getenv('HOST')
     db_port: str = os.getenv('PORT')
+    salt: str = os.getenv('SALT')
