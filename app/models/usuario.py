@@ -17,6 +17,7 @@ class UsuarioMongo(BaseModel):
     isLocalGuide: bool
     numReviewsEnBD: int
 
+
 class UsuarioSQL(BaseModel):
     Nombre: str
     CorreoElectronico: str
@@ -24,6 +25,7 @@ class UsuarioSQL(BaseModel):
     Contraseña: str
     FechaNac: date
     Direccion: str
+
 
 class UserLoginSchema(BaseModel):
     email: str

@@ -90,7 +90,7 @@ def get_Reviews_from_Restaurant(id):
     coll = db["reviews"]
     reviews = coll.find(
         {"restaurantOid": ObjectId(id)}
-    )
+    ).limit(10)
     return reviewsEntity(reviews)
 
 

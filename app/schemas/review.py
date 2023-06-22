@@ -19,6 +19,8 @@ def reviewEntity(item) -> dict:
         "isLocalGuide": item["isLocalGuide"],
         "stars": item["stars"],
         "lastReview": item["lastReview"],
+        "restaurantOid": str(item["restaurantOid"]),
+        "userOid": str(item["userOid"])
     }
 
 

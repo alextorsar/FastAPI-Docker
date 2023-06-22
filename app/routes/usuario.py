@@ -84,9 +84,12 @@ def check_login_info(data: UserLoginSchema):
         return False
 
 
-@usuario.post("/user/login")
-async def user_login(user: UserLoginSchema):
+@usuario.post("/user/login/{email}/{contrasenia}")
+async def user_login(email, contrasenia):
+    user = UserLoginSchema(email=email, password=contrasenia)
+    print(user)
     if check_user_exists(user) and check_login_info(user):
+        print("dentro")
         connSQL = FactoriaSQL.getConexion()
         sentencia = "SELECT * FROM bd_relacional.usuario where bd_relacional.usuario.CorreoElectronico = %s;"
         cursor = connSQL.cursor()
@@ -104,6 +107,7 @@ async def user_login(user: UserLoginSchema):
             "accesstoken": signJWT(idUsuario)
         }
     else:
+        print("fuera")
         return {
             "error": "Wrong login details!"
         }
