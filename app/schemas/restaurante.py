@@ -81,7 +81,7 @@ def restauranteEntityId(item) -> dict:
 def restaurantesEntityId(restaurantes) -> list:
     return [restauranteEntityId(item) for item in restaurantes]
 
-def transformarEsquemaRelacionalAMongo(restaurante: RestauranteSQL)->dict:
+def converRestaurantSQLToMongo(restaurante: RestauranteSQL)->dict:
     return {
         "business_status": Optional[str],
         "formatted_address": restaurante.localizacion,

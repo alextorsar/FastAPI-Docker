@@ -3,6 +3,7 @@ import json
 from bson.objectid import ObjectId
 from fastapi import APIRouter, Depends
 from app.bd import FactoriaMongo
+from app.bd import FactoriaSQL
 from app.routes.restaurante import get_RestaurantsId_From_Reviewers
 from app.schemas.review import reviewEntity, reviewsEntity, reviewsAlgoritmoEntity, ReviewMongoEntity
 from app.models.review import ReviewMongo
@@ -52,8 +53,15 @@ def create_Review(review: ReviewMongo):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
     coll = db["reviews"]
-    coll.insert_one(ReviewMongoEntity(review))
+    idReview = coll.insert_one(ReviewMongoEntity(review)).inserted_id
+    idReview = str(idReview)
     conn.close()
+    connSQL = FactoriaSQL.getConexion()
+    sentencia = "INSERT INTO bd_relacional.reseña(idreseña, puntuacion, texto, usuario_idUsuario, restaurante_idrestaurante) VALUES (%s, %s, %s, %s, %s)"
+    cursor = connSQL.cursor()
+    cursor.execute(sentencia, (idReview, review.stars, review.text, review.userOid, review.restaurantOid))
+    connSQL.commit()
+    connSQL.close()
     return "Review creada"
 
 

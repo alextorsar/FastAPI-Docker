@@ -18,3 +18,11 @@ class ReviewMongo(BaseModel):
     lastReview: Optional[bool]
     userOid: str
     restaurantOid: str
+
+class ReviewSQL(BaseModel):
+    idreseña: str
+    puntuacion: int
+    texto: str
+    usuario_idUsuario: str
+    restaurante_idrestaurante: str
+    localGuide: Optional[bool]

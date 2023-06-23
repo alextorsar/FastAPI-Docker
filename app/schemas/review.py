@@ -55,3 +55,14 @@ def ReviewMongoEntity(review : ReviewMongo) -> dict:
         "userOid": ObjectId(review.userOid),
         "restaurantOid": ObjectId(review.restaurantOid)
     }
+
+
+def convertReviewMongoToSQL(review: ReviewMongo, idReview):
+    return{
+        "idreseña": str,
+        "puntuacion": int,
+        "texto": str,
+        "usuario_idUsuario": str,
+        "restaurante_idrestaurante": str,
+        "localguide": False
+    }

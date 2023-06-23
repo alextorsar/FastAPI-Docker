@@ -7,7 +7,7 @@ from app.bd import FactoriaSQL
 from app.bd import FactoriaMongo
 from app.routes.usuario import get_Users_With_X_Reviews
 from app.schemas.restaurante import restaurantesAlgoritmoEntity, \
-    restaurantesEntitySQL, restauranteEntitySQL, transformarEsquemaRelacionalAMongo
+    restaurantesEntitySQL, restauranteEntitySQL, converRestaurantSQLToMongo
 from app.models.restaurante import RestauranteMongo, RestauranteSQL
 from app.auth.auth_bearer import JWTBearer
 
@@ -94,7 +94,7 @@ def create_Restaurante(restaurant: RestauranteSQL):
     connMongo = FactoriaMongo.getConexion()
     db = connMongo["tfg"]
     restaurants = db["restaurants"]
-    restaurants.insert_one(transformarEsquemaRelacionalAMongo(restaurant))
+    restaurants.insert_one(converRestaurantSQLToMongo(restaurant))
     connMongo.close()
     return "Restaurante creado"
 
