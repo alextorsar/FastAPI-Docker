@@ -19,12 +19,12 @@ class UsuarioMongo(BaseModel):
 
 
 class UsuarioSQL(BaseModel):
-    Nombre: str
-    CorreoElectronico: str
-    Genero: Gender
-    Contraseña: str
-    FechaNac: date
-    Direccion: str
+    Name: str
+    Email: str
+    Gender: str
+    Password: str
+    Date: str
+    Address: str
 
 
 class UserLoginSchema(BaseModel):

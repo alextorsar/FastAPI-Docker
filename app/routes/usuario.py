@@ -49,12 +49,12 @@ async def create_Usuarios(user: UsuarioSQL):
     idUsuario = coll.insert_one(nuevo_usuario).inserted_id
     connMongo.close()
     idUsuario = str(idUsuario)
-    contraseniaCifrada = cipher_suite.encrypt(user.Contraseña.encode('utf-8'))
+    contraseniaCifrada = cipher_suite.encrypt(user.Password.encode('utf-8'))
     connSQL = FactoriaSQL.getConexion()
     sentencia = "INSERT INTO bd_relacional.usuario VALUES (%s, %s, %s, %s, %s, %s, %s)"
     cursor = connSQL.cursor()
-    cursor.execute(sentencia, (idUsuario, user.CorreoElectronico, user.Genero, contraseniaCifrada,
-                               user.FechaNac.strftime('%Y-%m-%d'), user.Direccion, user.Nombre))
+    cursor.execute(sentencia, (idUsuario, user.Email, user.Gender, contraseniaCifrada,
+                               user.Date, user.Address, user.Name))
     connSQL.commit()
     connSQL.close()
     return signJWT(idUsuario)

@@ -56,7 +56,7 @@ def usuariosEntitySQL(usuarios) -> list:
 
 def convertUserSQLToMongo(usuario: UsuarioSQL):
     return {
-        "name": usuario.Nombre,
+        "name": usuario.Name,
         "reviewerId": None,
         "reviewerUrl": None,
         "reviewerNumberOfReviews": 0,
