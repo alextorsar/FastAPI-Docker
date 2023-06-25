@@ -10,7 +10,7 @@ def reviewEntity(item) -> dict:
         "restaurantName": item["restaurantName"],
         "name": item["name"],
         "text": item["text"],
-        "publishedAtDate": item["publishedAtDate"],
+        "publishedAtDate": str(item["publishedAtDate"]),
         "likesCount": item["likesCount"],
         "reviewId": item["reviewId"],
         "reviewerId": item["reviewerId"],

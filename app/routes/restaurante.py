@@ -68,7 +68,7 @@ def get_RestaurantesRecomendados(idUsuario):
                "place_id, price_level, num_reviews, rating FROM bd_relacional.esrecomendadovecinoscercanos INNER JOIN " \
                "bd_relacional.restaurante ON bd_relacional.esrecomendadovecinoscercanos.restaurante_idrestaurante = " \
                "bd_relacional.restaurante.idrestaurante WHERE esrecomendadovecinoscercanos.usuario_idUsuario = '{" \
-               "}'ORDER BY indiceRecomendacion DESC LIMIT 10;".format(
+               "}'ORDER BY indiceRecomendacion DESC LIMIT 20;".format(
         idUsuario)
     cursor = connSQL.cursor()
     cursor.execute(consulta)
