@@ -26,6 +26,7 @@ def usuarioEntity(item) -> dict:
         "reviewerNumberOfReviews": item["reviewerNumberOfReviews"],
         "isLocalGuide": item["isLocalGuide"],
         "numReviewsEnBD": item["numReviewsEnBD"],
+        "vegano": False
     }
 
 

@@ -25,6 +25,7 @@ class UsuarioSQL(BaseModel):
     Password: str
     Date: str
     Address: str
+    Vegano: bool
 
 
 class UserLoginSchema(BaseModel):

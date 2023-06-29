@@ -31,11 +31,18 @@ def get_Usuarios():
 
 @usuario.get("/usuarios/{id}",dependencies=[Depends(JWTBearer())])
 def get_Usuario(id):
-    conn = FactoriaMongo.getConexion()
-    db = conn["tfg"]
+    connMongo = FactoriaMongo.getConexion()
+    connSQL = FactoriaSQL.getConexion()
+    cursor = connSQL.cursor()
+    db = connMongo["tfg"]
     coll = db["users"]
     usuario_bd = usuarioEntity(coll.find_one({"_id": ObjectId(id)}))
-    conn.close()
+    cursor.execute("SELECT * FROM bd_relacional.usuario WHERE idUsuario = %s", id)
+    user = cursor.fetchone()
+    usuario_bd["Vegano"] = user["Vegano"]
+    connMongo.close()
+    connSQL.commit()
+    connSQL.close()
     return dict(usuario_bd)
 
 
@@ -89,7 +96,6 @@ async def user_login(email, contrasenia):
     user = UserLoginSchema(email=email, password=contrasenia)
     print(user)
     if check_user_exists(user) and check_login_info(user):
-        print("dentro")
         connSQL = FactoriaSQL.getConexion()
         sentencia = "SELECT * FROM bd_relacional.usuario where bd_relacional.usuario.CorreoElectronico = %s;"
         cursor = connSQL.cursor()
@@ -104,10 +110,10 @@ async def user_login(email, contrasenia):
             "FechaNac": str(result['FechaNac']),
             "Direccion": str(result['Direccion']),
             "Nombre": str(result['Nombre']),
-            "accesstoken": signJWT(idUsuario)
+            "accesstoken": signJWT(idUsuario),
+            "Vegano": result["Vegano"]
         }
     else:
-        print("fuera")
         return {
             "error": "Wrong login details!"
         }
@@ -150,7 +156,7 @@ def get_Users_With_X_Reviews(count):
     return result
 
 
-@usuario.get("/algoritmo/usuarios/{count]")
+@usuario.get("/algoritmo/usuarios/{count}")
 def get_Users_With_X_Reviews_Algorythm(count):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
@@ -164,11 +170,10 @@ def get_Users_With_X_Reviews_Algorythm(count):
     return result
 
 
-@usuario.get("/algoritmo/usuarios/operacionales/{count]")
+@usuario.get("/algoritmo/usuarios/operacionales/{count}")
 def get_Operational_Users_With_X_Reviews_Algorythm(count):
     conn = FactoriaSQL.getConexion()
-    consulta = "SELECT idUsuario FROM bd_relacional.usuario INNER JOIN bd_relacional.reseña ON bd_relacional.usuario.idUsuario = bd_relacional.reseña.usuario_idUsuario GROUP " \
-               "BY bd_relacional.usuario.idUsuario HAVING COUNT(*) >= " + count
+    consulta = "SELECT idUsuario FROM bd_relacional.usuario INNER JOIN bd_relacional.reseña ON bd_relacional.usuario.idUsuario = bd_relacional.reseña.usuario_idUsuario GROUP BY bd_relacional.usuario.idUsuario HAVING COUNT(*) >= {}".format(count)
     cursor = conn.cursor()
     cursor.execute(consulta)
     users = cursor.fetchall()
@@ -184,3 +189,15 @@ def get_Operational_Users_With_X_Reviews_Algorythm(count):
     conn.commit()
     conn.close()
     return users
+
+@usuario.post("/usuario/vegano/{idUsuario}/{vegano}")
+def setVegano(idUsuario, vegano:bool):
+    conn = FactoriaSQL.getConexion()
+    consulta = "UPDATE bd_relacional.usuario SET Vegano = %s WHERE idUsuario = %s"
+    cursor = conn.cursor()
+    cursor.execute(consulta, (vegano, idUsuario))
+    print(cursor.rowcount)
+    conn.commit()
+    conn.close()
+    return "Usuario actualizado con exito"
+

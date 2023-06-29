@@ -68,36 +68,44 @@ def get_RestaurantesRecomendados(idUsuario):
                "place_id, price_level, num_reviews, rating FROM bd_relacional.esrecomendadovecinoscercanos INNER JOIN " \
                "bd_relacional.restaurante ON bd_relacional.esrecomendadovecinoscercanos.restaurante_idrestaurante = " \
                "bd_relacional.restaurante.idrestaurante WHERE esrecomendadovecinoscercanos.usuario_idUsuario = '{" \
-               "}'ORDER BY indiceRecomendacion DESC LIMIT 20;".format(
-        idUsuario)
+               "}'ORDER BY indiceRecomendacion DESC LIMIT 20;".format(idUsuario)
     cursor = connSQL.cursor()
     cursor.execute(consulta)
-    results = cursor.fetchall()
-    restaurantesRecomendados = restaurantesEntitySQL(results)
+    if cursor.rowcount >= 1:
+        results = cursor.fetchall()
+        restaurantesRecomendados = restaurantesEntitySQL(results)
+    else:
+        cursor.execute(
+            "SELECT  idrestaurante, localizacion, latitud, longitud, nombre, foto_URL, place_id, price_level, "
+            "num_reviews, rating FROM bd_relacional.restaurante ORDER BY rating DESC LIMIT 20;")
+        results = cursor.fetchall()
+        restaurantesRecomendados = restaurantesEntitySQL(results)
     connSQL.commit()
     connSQL.close()
     return restaurantesRecomendados
 
-
-# FALLA
-@restaurante.post("/restaurantes", dependencies=[Depends(JWTBearer())])
-def create_Restaurante(restaurant: RestauranteSQL):
+@restaurante.get("/restaurantes/veganos/{idUsuario}", dependencies=[Depends(JWTBearer())])
+def get_RestaurantesRecomendadosVeganos(idUsuario):
     connSQL = FactoriaSQL.getConexion()
-    sentenciaSQL = "INSERT INTO bd_relacional.restaurante VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    consulta = "SELECT indiceRecomendacion, idrestaurante, localizacion, latitud, longitud, nombre, foto_URL, " \
+               "place_id, price_level, num_reviews, rating FROM bd_relacional.esrecomendadovecinoscercanos INNER JOIN " \
+               "bd_relacional.restaurante ON bd_relacional.esrecomendadovecinoscercanos.restaurante_idrestaurante = " \
+               "bd_relacional.restaurante.idrestaurante WHERE vegano = TRUE AND esrecomendadovecinoscercanos.usuario_idUsuario = '{" \
+               "}'ORDER BY indiceRecomendacion DESC LIMIT 20;".format(idUsuario)
     cursor = connSQL.cursor()
-    cursor.execute(sentenciaSQL, (restaurant["idrestaurante"], restaurant["localizacion"], restaurant["nombre"],
-                                  restaurant["descripcion"], restaurant["latitud"], restaurant["longitud"],
-                                  restaurant["foto_URL"], restaurant["place_id"],
-                                  restaurant["price_level"], restaurant["rating"], restaurant["num_reviews"]))
+    cursor.execute(consulta)
+    if cursor.rowcount >= 1:
+        results = cursor.fetchall()
+        restaurantesRecomendados = restaurantesEntitySQL(results)
+    else:
+        cursor.execute("SELECT  idrestaurante, localizacion, latitud, longitud, nombre, foto_URL, place_id, "
+                       "price_level, num_reviews, rating FROM bd_relacional.restaurante WHERE vegano = TRUE ORDER BY "
+                       "rating DESC LIMIT 20;")
+        results = cursor.fetchall()
+        restaurantesRecomendados = restaurantesEntitySQL(results)
     connSQL.commit()
     connSQL.close()
-    connMongo = FactoriaMongo.getConexion()
-    db = connMongo["tfg"]
-    restaurants = db["restaurants"]
-    restaurants.insert_one(converRestaurantSQLToMongo(restaurant))
-    connMongo.close()
-    return "Restaurante creado"
-
+    return restaurantesRecomendados
 
 @restaurante.get("/algoritmo/restaurantes/{count}")
 def get_RestaurantsId_From_Reviewers(count):
