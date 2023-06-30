@@ -58,7 +58,7 @@ async def create_Usuarios(user: UsuarioSQL):
     idUsuario = str(idUsuario)
     contraseniaCifrada = cipher_suite.encrypt(user.Password.encode('utf-8'))
     connSQL = FactoriaSQL.getConexion()
-    sentencia = "INSERT INTO bd_relacional.usuario VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    sentencia = "INSERT INTO bd_relacional.usuario VALUES (%s, %s, %s, %s, %s, %s, %s, false)"
     cursor = connSQL.cursor()
     cursor.execute(sentencia, (idUsuario, user.Email, user.Gender, contraseniaCifrada,
                                user.Date, user.Address, user.Name))
