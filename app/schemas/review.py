@@ -4,23 +4,39 @@ from app.models.review import ReviewMongo
 
 
 def reviewEntity(item) -> dict:
+    if(item["restaurantName"] != None):
+        restaurantName = item["restaurantName"]
+    else:
+        restaurantName = ""
+    if (item["name"]!= None):
+        name = item["name"]
+    else:
+        name = ""
+    if (item["likesCount"]!= None):
+        likesCount = item["likesCount"]
+    else:
+        likesCount = 0
+    if (item["isLocalGuide"]!= None):
+        isLocalGuide = item["isLocalGuide"]
+    else:
+        isLocalGuide = False
     return {
         "oid": str(item["_id"]),
         "placeId": item["placeId"],
-        "restaurantName": item["restaurantName"],
-        "name": item["name"],
+        "restaurantName": restaurantName,
+        "name": name,
         "text": item["text"],
-        "publishedAtDate": str(item["publishedAtDate"]),
-        "likesCount": item["likesCount"],
-        "reviewId": item["reviewId"],
+        "likesCount": likesCount,
+        "reviewId": str(item["_id"]),
         "reviewerId": item["reviewerId"],
-        "reviewerUrl": item["reviewerUrl"],
-        "reviewerNumberOfReviews": item["reviewerNumberOfReviews"],
-        "isLocalGuide": item["isLocalGuide"],
+        "reviewerUrl": "",
+        "reviewerNumberOfReviews": 0,
+        "isLocalGuide": isLocalGuide,
         "stars": item["stars"],
         "lastReview": item["lastReview"],
         "restaurantOid": str(item["restaurantOid"]),
-        "userOid": str(item["userOid"])
+        "userOid": str(item["userOid"]),
+    "publishedAtDate": str(item["publishedAtDate"])
     }
 
 
@@ -53,7 +69,8 @@ def ReviewMongoEntity(review : ReviewMongo) -> dict:
         "stars": review.stars,
         "lastReview": True,
         "userOid": ObjectId(review.userOid),
-        "restaurantOid": ObjectId(review.restaurantOid)
+        "restaurantOid": ObjectId(review.restaurantOid),
+        "publishedAtDate": review.publishedAtDate
     }
 
 

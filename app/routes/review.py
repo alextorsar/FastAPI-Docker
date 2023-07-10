@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from bson.objectid import ObjectId
@@ -53,6 +54,7 @@ def create_Review(review: ReviewMongo):
     conn = FactoriaMongo.getConexion()
     db = conn["tfg"]
     coll = db["reviews"]
+    review.publishedAtDate = datetime.datetime.now()
     idReview = coll.insert_one(ReviewMongoEntity(review)).inserted_id
     idReview = str(idReview)
     conn.close()
